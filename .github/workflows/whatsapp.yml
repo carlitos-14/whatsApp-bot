@@ -1,0 +1,39 @@
+name: WhatsApp Bot
+
+on:
+  schedule:
+    - cron: "* * * * *"   # Cada minuto
+  workflow_dispatch:        # También se puede lanzar manualmente
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run WhatsApp agent
+        env:
+          GROQ_API_KEY:            ${{ secrets.GROQ_API_KEY }}
+          TWILIO_ACCOUNT_SID:      ${{ secrets.TWILIO_ACCOUNT_SID }}
+          TWILIO_AUTH_TOKEN:       ${{ secrets.TWILIO_AUTH_TOKEN }}
+          TWILIO_WHATSAPP_NUM:     ${{ secrets.TWILIO_WHATSAPP_NUM }}
+          SUPABASE_URL:            ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY:            ${{ secrets.SUPABASE_KEY }}
+          GMAIL_CREDENTIALS_JSON:  ${{ secrets.GMAIL_CREDENTIALS_JSON }}
+          GOOGLE_CALENDAR_ID:      ${{ secrets.GOOGLE_CALENDAR_ID }}
+          COMPANY_NAME:            ${{ secrets.COMPANY_NAME }}
+          CONTACT_INFO:            ${{ secrets.CONTACT_INFO }}
+          EVENT_DURATION_MINUTES:  ${{ secrets.EVENT_DURATION_MINUTES }}
+          MAX_CITAS_ACTIVAS:       ${{ secrets.MAX_CITAS_ACTIVAS }}
+          WINDOW_MINUTES:          "2"
+        run: python whatsapp_agent.py
