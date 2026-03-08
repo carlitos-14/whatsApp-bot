@@ -37,3 +37,10 @@ jobs:
           MAX_CITAS_ACTIVAS:       ${{ secrets.MAX_CITAS_ACTIVAS }}
           WINDOW_MINUTES:          "2"
         run: python whatsapp_agent.py
+
+      - name: Keep alive
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git commit --allow-empty -m "keep-alive [skip ci]"
+          git push
